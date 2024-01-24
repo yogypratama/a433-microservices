@@ -29,7 +29,7 @@ spec:
         # Nama container
       - name: karsajobs-ui
         # Nama image yang digunakan untuk membuat container
-        image: yogypratama/karsajobs-ui:latest
+        image: ghcr.io/yogypratama/karsajobs-ui:latest
         # Mekanisme pull image (image dipull setiap kali Pod dimulai)
         imagePullPolicy: Always
         # Port yang digunakan
