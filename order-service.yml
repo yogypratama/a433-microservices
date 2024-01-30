@@ -1,0 +1,69 @@
+# Versi API yang digunakan
+apiVersion: apps/v1
+# Jenis objek Kubernetes (Deployment)
+kind: Deployment
+# Metadata untuk Deployment
+metadata:
+  # Nama Deployment
+  name: order-deployment
+  # Label Deployment
+  labels:
+    app: ecommerce
+    type: order
+# Spesifikasi untuk Deployment
+spec:
+  # Jumlah replika Pod yang akan dibuat
+  replicas: 1
+  # Selektor untuk memilih Pod
+  selector:
+    # Pod yang dipilih harus memiliki label sesuai dengan ketentuan (type: order)
+    matchLabels:
+      type: order
+  # Template untuk membuat Pod
+  template:
+    # Metadata untuk Pod
+    metadata:
+      # Label Pod
+      labels:
+        app: ecommerce
+        type: order
+    # Spesifikasi untuk Pod
+    spec:
+      # Konfigurasi container dalam Pod
+      containers:
+        # Nama container
+      - name: order-service
+        # Nama image yang digunakan untuk membuat container
+        image: ghcr.io/yogypratama/order-service
+        # Mekanisme pull image (image di-pull setiap kali pod dimulai)
+        imagePullPolicy: Always
+        # Port yang digunakan
+        ports:
+        # Port yang digunakan untuk mengakses container
+        - containerPort: 3000
+        # Environment variable yang dibutuhkan oleh aplikasi
+        env:
+        - name: AMQP_URL
+          value: amqp://user:iwZHD5CrJ2umsDuf@mu-rabbit-rabbitmq.rabbit.svc.cluster.local:5672
+---
+# Versi API yang digunakan
+apiVersion: v1
+# Jenis objek Kubernetes (Service)
+kind: Service
+# Metadata untuk Service
+metadata:
+  # Nama Service
+  name: order-service
+  # Label Service
+  labels:
+    app: ecommerce
+# Spesifikasi untuk Service
+spec:
+  # Selektor untuk memilih Pod yang akan dilayani oleh Service
+  selector:
+    type: order
+  # Port yang dibuka pada Service
+  ports:
+  - port: 3000
+  # Tipe Service yang akan dibuat (NodePort)
+  type: NodePort
